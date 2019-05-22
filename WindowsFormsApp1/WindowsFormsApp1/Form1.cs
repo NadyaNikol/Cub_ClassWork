@@ -13,20 +13,37 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
+        public float degree = 0;
+        Timer timer = new Timer();
+        Graphics graphics = null;
         public Form1()
         {
             InitializeComponent();
             Paint += Form1_Paint;
+            timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
+            timer.Start();
+            graphics = this.CreateGraphics();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (degree == 0)
+                degree = -0.1f;
+
+            else degree = 0;
+            Invalidate();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            Graphics graphics = e.Graphics;
+             graphics = e.Graphics;
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
             List<Rectangle> listRect = new List<Rectangle>();
             Rectangle rect = new Rectangle(50, 50, 50, 50);
 
-            int myLocation = 70;
+            int myLocation = 50;
             int step1 = myLocation, step2 = myLocation;
 
             for (int i = 0; i < 3; i++)
@@ -53,10 +70,16 @@ namespace WindowsFormsApp1
             graphics.FillRectangle(new TextureBrush(Image.FromFile("1.jpg")), listRect[7]);
             graphics.FillRectangle(new TextureBrush(Image.FromFile("2.jpg")), listRect[8]);
 
+            Matrix matrix = new Matrix();
 
+            matrix.Shear(degree,degree);
+            graphics.Transform = matrix;
+            Point[] points = { new Point(20, 25), new Point(50, 50), new Point(50, 200), new Point(50, 200), new Point(20, 175) };
+            graphics.FillPolygon(Brushes.Black, points);
 
-            Point[] v = { new Point(), };
-            graphics.FillPolygon(, v);
+            Point[] points2 = { new Point(20, 25), new Point(175, 25), new Point(200, 50), new Point(200, 50), new Point(50, 50) };
+            graphics.FillPolygon(Brushes.Yellow, points2);
+
 
         }
     }
